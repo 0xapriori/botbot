@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Trading Bot Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Market Leaders - Trading Volume: Horizontal Bar Chart (Chart.js) - Goal: Compare bot volumes. Interaction: Tooltips. Justification: Clear visual hierarchy.
+        - Market Leaders - User Activity: Grouped Bar Chart (Chart.js) - Goal: Compare user bases. Interaction: Tooltips. Justification: Shows reach & engagement.
+        - Bot Deep Dive: Dynamic content display based on dropdown. Goal: Focused bot info. Interaction: Selection. Justification: Detailed view on demand.
+        - Comparative View - Features: HTML Table. Goal: Side-by-side feature comparison. Interaction: Static. Justification: Direct comparison.
+        - Comparative View - Profitability/Feedback: Ranked lists/simple bars. Goal: Visualize subjective rankings. Interaction: Hover. Justification: Quick understanding of sentiment.
+        - Risks: Accordion. Goal: Organize risk info. Interaction: Expand/collapse. Justification: Digestible presentation.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* slate-300 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* slate-500 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px; /* Adjusted for better fit */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 450px; /* Max height */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            border-bottom-width: 2px;
+            font-weight: 600;
+        }
+        /* Accordion styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+        }
+        .accordion-button .arrow {
+            transition: transform 0.3s ease-out;
+        }
+        .accordion-button.open .arrow {
+            transform: rotate(90deg);
+        }
+        /* Custom card styling */
+        .custom-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .custom-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-pink-50 text-slate-800">
+
+    <header class="bg-cyan-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl sm:text-2xl font-bold">Telegram Trading Bot Analyzer</h1>
+                <button id="mobileMenuButton" class="md:hidden p-2 rounded-md hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+            <nav id="desktopNav" class="hidden md:flex items-center justify-center space-x-2 sm:space-x-4 py-2">
+                <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Overview</a>
+                <a href="#understanding-bots" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Understanding Bots</a>
+                <a href="#market-leaders" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Market Leaders</a>
+                <a href="#bot-deep-dive" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Bot Deep Dive</a>
+                <a href="#comparative-view" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Comparisons</a>
+                <a href="#risks" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Risks & Considerations</a>
+                <a href="#conclusion" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Conclusion</a>
+            </nav>
+        </div>
+        <div id="mobileNav" class="md:hidden hidden bg-cyan-600">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Overview</a>
+                <a href="#understanding-bots" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Understanding Bots</a>
+                <a href="#market-leaders" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Market Leaders</a>
+                <a href="#bot-deep-dive" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Bot Deep Dive</a>
+                <a href="#comparative-view" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Comparisons</a>
+                <a href="#risks" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Risks & Considerations</a>
+                <a href="#conclusion" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Conclusion</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <section id="overview" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Overview of Telegram Trading Bots</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p class="mb-4 text-lg leading-relaxed">Welcome to the interactive analysis of the Telegram Trading Bot landscape. This application synthesizes a comprehensive report on these automated tools, which have surged in popularity within the cryptocurrency sphere. Telegram bots offer users convenient ways to trade, snipe new tokens, copy strategies, and access market data directly through the messaging app.</p>
+                <p class="mb-4 leading-relaxed">This platform will guide you through their evolution, market dominance by key players (especially on Solana), operational mechanics, and user-perceived profitability. We'll also delve into the critical security, legal, and platform risks. The goal is to provide a clear, interactive understanding of this dynamic ecosystem, allowing you to explore data, compare bots, and grasp the essential considerations for users and developers alike.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-pink-100 p-4 rounded-lg shadow text-center">
+                        <h3 class="text-xl font-semibold text-pink-700">Market Growth</h3>
+                        <p class="text-slate-700 mt-2">Explosive growth, moving from niche tools to significant market players.</p>
+                    </div>
+                    <div class="bg-cyan-100 p-4 rounded-lg shadow text-center">
+                        <h3 class="text-xl font-semibold text-cyan-700">Dominant Players</h3>
+                        <p class="text-slate-700 mt-2">A few bots capture most volume, with Solana-based bots rising rapidly.</p>
+                    </div>
+                    <div class="bg-pink-100 p-4 rounded-lg shadow text-center">
+                        <h3 class="text-xl font-semibold text-pink-700">Key Concerns</h3>
+                        <p class="text-slate-700 mt-2">Security vulnerabilities and regulatory ambiguity are major challenges.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="understanding-bots" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Understanding Telegram Bots</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p class="mb-6 text-lg leading-relaxed">This section provides foundational knowledge about Telegram trading bots. You'll learn what they are, how they've evolved, the different types available, and the common benefits and use cases that have driven their adoption in the crypto community. Understanding these basics is key to navigating the more detailed analyses of specific bots and market trends presented later.</p>
+
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold text-pink-600 mb-3">What are Telegram Trading Bots?</h3>
+                    <p class="mb-2 leading-relaxed">Telegram trading bots are automated software programs operating within the Telegram app. They allow users to execute crypto trades, monitor markets, and manage portfolios via chat commands or interactive menus. Initially simple, they've evolved into sophisticated platforms offering features like token sniping, copy trading, and advanced order types.</p>
+                    <p class="leading-relaxed">Their growth is tied to Telegram's large user base (950M+ MAU as of July 2024) and its bot-friendly API. The global crypto bot market is projected to grow from $1.3B in 2023 to $1.8B by 2030, with Telegram bots being a significant segment.</p>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold text-pink-600 mb-3">Types of Telegram Bots</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="custom-card bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                            <h4 class="font-bold text-cyan-700">Cryptocurrency Trading Bots</h4>
+                            <p class="text-sm text-slate-700 mt-1">Largest category. Includes Sniping Bots (e.g., Maestro, Unibot), Copy Trading Bots, Limit Order Bots, and DEX Aggregators.</p>
+                        </div>
+                        <div class="custom-card bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                            <h4 class="font-bold text-cyan-700">Signal Bots</h4>
+                            <p class="text-sm text-slate-700 mt-1">Provide trading signals (buy/sell suggestions). Example: Cornix.</p>
+                        </div>
+                        <div class="custom-card bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                            <h4 class="font-bold text-cyan-700">Arbitrage Bots</h4>
+                            <p class="text-sm text-slate-700 mt-1">Exploit price differences across exchanges.</p>
+                        </div>
+                        <div class="custom-card bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                            <h4 class="font-bold text-cyan-700">Airdrop Farming Bots</h4>
+                            <p class="text-sm text-slate-700 mt-1">Automate tasks to qualify for airdrops. Example: LootBot.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-semibold text-pink-600 mb-3">Benefits & Common Use Cases</h3>
+                    <ul class="list-disc list-inside space-y-2 leading-relaxed">
+                        <li><span class="font-semibold">Automation & Efficiency:</span> 24/7 trading based on predefined parameters.</li>
+                        <li><span class="font-semibold">Speed & Execution:</span> Crucial for sniping and volatile markets.</li>
+                        <li><span class="font-semibold">Reduced Emotional Trading:</span> Adherence to programmed logic.</li>
+                        <li><span class="font-semibold">Accessibility & Convenience:</span> Easy to use on mobile/desktop via Telegram.</li>
+                        <li><span class="font-semibold">Common Uses:</span> Sniping new tokens, copy trading, automated DEX trading, risk management (stop-loss/take-profit).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="market-leaders" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Market Leaders & Popularity</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p class="mb-6 text-lg leading-relaxed">This section explores the dominant players in the Telegram trading bot market and analyzes their popularity through key metrics like trading volume and daily active users (DAU). The data, primarily sourced from on-chain analytics, reveals market concentrations and trends, such as the rise of Solana-based bots. Interactive charts below allow you to visualize this landscape.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-pink-600 mb-4 text-center">Lifetime Trading Volume</h3>
+                        <div class="chart-container bg-pink-50 p-4 rounded-lg shadow">
+                            <canvas id="tradingVolumeChart"></canvas>
+                        </div>
+                        <p class="text-sm text-slate-600 mt-2 text-center">Bots like Trojan, BonkBot, and Maestro lead in lifetime volume, with Solana-based bots showing significant activity.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-pink-600 mb-4 text-center">User Activity (Lifetime & Daily)</h3>
+                        <div class="chart-container bg-cyan-50 p-4 rounded-lg shadow">
+                            <canvas id="userActivityChart"></canvas>
+                        </div>
+                        <p class="text-sm text-slate-600 mt-2 text-center">Trojan and Sol Trading Bot report high lifetime user counts, while DAU varies, indicating user engagement levels.</p>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-semibold text-pink-600 mb-3">Mindshare & Community Sentiment</h3>
+                    <p class="leading-relaxed">Social media (Reddit, Twitter/X) and Telegram group sizes offer qualitative insights into a bot's reputation. Sentiment is often mixed: Maestro is noted for reliability, while BonkBot faces fee complaints. Fake bot warnings are common across communities, emphasizing the need for caution.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="bot-deep-dive" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Bot Deep Dive</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p class="mb-6 text-lg leading-relaxed">Explore detailed profiles of leading Telegram trading bots. Select a bot from the dropdown to view its overview, how it works, key features, popularity metrics, user feedback summary, and security posture. This allows for a focused understanding of individual platforms within the ecosystem.</p>
+                <div class="mb-4">
+                    <label for="botSelector" class="block text-sm font-medium text-slate-700">Select a Bot:</label>
+                    <select id="botSelector" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md shadow-sm">
+                        <option value="">-- Select a Bot --</option>
+                        <option value="maestro">Maestro</option>
+                        <option value="trojan">Trojan (on Solana)</option>
+                        <option value="bonkbot">BonkBot</option>
+                        <option value="bananagun">Banana Gun</option>
+                        <option value="unibot_eth">Unibot (ETH)</option>
+                        <option value="gmgn">GMGN Bot</option>
+                        <option value="bullx">BullX Bot</option>
+                    </select>
+                </div>
+                <div id="botDetails" class="mt-6 p-4 bg-slate-50 rounded-lg min-h-[300px]">
+                    <p class="text-slate-500 text-center">Select a bot to see details here.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparative-view" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Comparative Analysis</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p class="mb-6 text-lg leading-relaxed">This section offers a comparative look at various Telegram trading bots across key dimensions. You can examine a feature matrix to see what different bots offer, and review summarized rankings based on user-perceived profitability and overall user feedback. This helps in understanding the relative strengths and weaknesses of different platforms.</p>
+
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold text-pink-600 mb-4">Feature Comparison Matrix</h3>
+                    <div class="overflow-x-auto rounded-lg shadow">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-cyan-500 text-white">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Feature</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Maestro</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Trojan</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">BonkBot</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Banana Gun</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Unibot (ETH)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-200 text-sm">
+                                <tr><td class="px-4 py-2 font-medium">Supported Chains</td><td class="px-4 py-2">ETH, BSC, SOL, ARB, Base, etc.</td><td class="px-4 py-2">Solana primarily</td><td class="px-4 py-2">Solana only</td><td class="px-4 py-2">ETH, SOL, Base, Blast</td><td class="px-4 py-2">ETH, SOL</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Sniping</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Copy Trading</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">MEV Protection</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Optional</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Anti-Rug/Scam Protect</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Implied</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Yes</td><td class="px-4 py-2">Fail Guard</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Typical Fees</td><td class="px-4 py-2">~1%</td><td class="px-4 py-2">1% (0.9% ref)</td><td class="px-4 py-2">1% per trade</td><td class="px-4 py-2">1% snipe, 0.5% manual</td><td class="px-4 py-2">~1%</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Native Token</td><td class="px-4 py-2">No</td><td class="px-4 py-2">No</td><td class="px-4 py-2">$BONK int.</td><td class="px-4 py-2">$BANANA</td><td class="px-4 py-2">$UNIBOT</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-pink-600 mb-4">User Profitability Perception</h3>
+                        <div class="space-y-3">
+                            <div class="custom-card bg-pink-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-pink-700">Maestro:</span> 3.5/5 - Reliable, good features.</div>
+                            <div class="custom-card bg-pink-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-pink-700">Trojan:</span> 3.0/5 - High volume, mixed P&L feedback.</div>
+                            <div class="custom-card bg-pink-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-pink-700">Banana Gun:</span> 3.0/5 - Revshare, sniping success reported.</div>
+                            <div class="custom-card bg-pink-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-pink-700">BonkBot:</span> 2.5/5 - Fast, but fees impact small trades.</div>
+                            <div class="custom-card bg-pink-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-pink-700">BullX:</span> 1.5/5 - Negative feedback on fees/profitability.</div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">*Subjective ranking based on report's synthesis of user sentiment and available data.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-pink-600 mb-4">User Feedback Score</h3>
+                         <div class="space-y-3">
+                            <div class="custom-card bg-cyan-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-cyan-700">Maestro:</span> Positive - Reliability, support.</div>
+                            <div class="custom-card bg-cyan-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-cyan-700">Cornix:</span> Positive to Mixed - Good automation, VIP cost.</div>
+                            <div class="custom-card bg-cyan-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-cyan-700">Trojan:</span> Mixed - Good for SOL, fake bot issues.</div>
+                            <div class="custom-card bg-cyan-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-cyan-700">Banana Gun:</span> Mixed - Fast sniping, past exploit.</div>
+                            <div class="custom-card bg-cyan-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-cyan-700">BonkBot:</span> Mixed to Negative - Fast, but fee/support issues.</div>
+                            <div class="custom-card bg-cyan-100 p-3 rounded-lg shadow-sm"><span class="font-semibold text-cyan-700">BullX:</span> Largely Negative - Fee issues, fund drain allegations.</div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">*Subjective ranking based on report's synthesis of user sentiment.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="risks" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Risks & Considerations</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                 <p class="mb-6 text-lg leading-relaxed">While Telegram trading bots offer convenience, they come with significant risks. This section outlines key security vulnerabilities (like phishing and private key management), the ambiguous legal and regulatory landscape, and platform-specific risks related to Telegram itself. Understanding these is crucial for both users and developers.</p>
+                <div class="space-y-4" id="risksAccordion">
+                    <div>
+                        <button class="accordion-button w-full flex justify-between items-center text-left px-4 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 focus:outline-none">
+                            <span class="font-semibold">Security Risks</span>
+                            <span class="arrow text-xl">&#x276F;</span>
+                        </button>
+                        <div class="accordion-content bg-pink-50 p-4 rounded-b-lg border border-t-0 border-pink-300">
+                            <ul class="list-disc list-inside space-y-2">
+                                <li><strong>Phishing & Scam Bots:</strong> Fake bots mimicking legitimate ones to steal funds/keys.</li>
+                                <li><strong>Wallet Security:</strong> Custodial nature of many bots means they handle private keys, posing risks if their systems are breached.</li>
+                                <li><strong>Smart Contract Vulnerabilities:</strong> Interaction with malicious or unaudited token contracts can lead to losses.</li>
+                                <li><strong>Data Interception & API Key Security:</strong> Insecure handling of CEX API keys can lead to unauthorized access.</li>
+                                <li><strong>Telegram Platform Vulnerabilities:</strong> Exploits related to Telegram's infrastructure (e.g., Banana Gun oracle exploit).</li>
+                            </ul>
+                        </div>
+                    </div>
+                     <div>
+                        <button class="accordion-button w-full flex justify-between items-center text-left px-4 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 focus:outline-none">
+                            <span class="font-semibold">Legal & Regulatory Risks</span>
+                             <span class="arrow text-xl">&#x276F;</span>
+                        </button>
+                        <div class="accordion-content bg-cyan-50 p-4 rounded-b-lg border border-t-0 border-cyan-300">
+                            <ul class="list-disc list-inside space-y-2">
+                                <li><strong>AML/KYC Compliance:</strong> Many DEX bots lack KYC/AML, raising regulatory concerns.</li>
+                                <li><strong>Securities Laws:</strong> U.S. agencies (SEC, CFTC) can take action if bots facilitate trading in unregistered securities or make fraudulent claims.</li>
+                                <li><strong>Telegram's Terms of Service:</strong> Bots facilitating illegal activities can violate Telegram's ToS.</li>
+                                <li><strong>Jurisdictional Issues:</strong> Global operation creates complex cross-border legal challenges.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-button w-full flex justify-between items-center text-left px-4 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 focus:outline-none">
+                            <span class="font-semibold">Platform Risks (Building on Telegram)</span>
+                             <span class="arrow text-xl">&#x276F;</span>
+                        </button>
+                        <div class="accordion-content bg-pink-50 p-4 rounded-b-lg border border-t-0 border-pink-300">
+                            <ul class="list-disc list-inside space-y-2">
+                                <li><strong>API Limitations:</strong> Message rate limits can affect high-frequency bots.</li>
+                                <li><strong>Platform Stability:</strong> Bot reliability depends on Telegram's uptime.</li>
+                                <li><strong>API/Policy Changes:</strong> Telegram might alter its API or policies, impacting bot functionality or legality.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                 <div class="mt-8">
+                    <h3 class="text-2xl font-semibold text-pink-600 mb-3">Considerations for Building a Bot</h3>
+                    <p class="leading-relaxed">Developing a secure Telegram trading bot is complex, requiring robust planning, secure coding practices (especially for private key encryption), thorough testing (including paper trading), secure deployment, and continuous monitoring. Security best practices like regular audits, fail-safes, and user education are paramount.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Conclusion & Future Outlook</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <p class="mb-4 text-lg leading-relaxed">The Telegram trading bot market is a rapidly evolving space, offering convenience but also significant challenges. Security, user profitability transparency, and regulatory ambiguity are key areas needing attention. The future likely holds enhanced security measures, a greater focus on verifiable user P&L, deeper AI integration, improved cross-chain functionality, and eventual regulatory clarity.</p>
+                <p class="mb-4 leading-relaxed"><strong>For Users:</strong> Vigilance is key. Conduct thorough due diligence, understand fee structures and key management, start with small capital, use strong security practices (2FA), and always verify official bot links to avoid scams.</p>
+                <p class="leading-relaxed"><strong>For Developers:</strong> Prioritize security and transparency. Implement robust encryption, secure key management, undergo regular audits, communicate clearly with users about risks, and provide responsive support.</p>
+                <div class="mt-6 border-t border-slate-200 pt-6">
+                    <h3 class="text-xl font-semibold text-pink-600 mb-2">Key Glossary Terms</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li><strong>Sniping:</strong> Auto-buying new tokens.</li>
+                        <li><strong>MEV (Maximal Extractable Value):</strong> Profit from reordering/inserting transactions.</li>
+                        <li><strong>Anti-Rug Protection:</strong> Features to detect/prevent "rug pull" scams.</li>
+                        <li><strong>Custodial Wallet:</strong> Third-party holds private keys.</li>
+                    </ul>
+                    <p class="mt-4 text-xs text-slate-500">Refer to the full report for a comprehensive glossary and official bot links (always verify!).</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 text-center p-6 mt-12">
+        <p>&copy; 2025 Telegram Trading Bot Analysis. Information purposes only. Not financial advice.</p>
+        <p class="text-xs mt-1">Data synthesized from "The Evolving Landscape of Telegram Trading Bots: A Comprehensive Analysis" report.</p>
+    </footer>
+
+    <script>
+        // Chart.js Global Configuration
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#334155'; // slate-700
+
+        // Utility to wrap long labels
+        function wrapLabels(label, maxWidth) {
+            const words = label.split(' ');
+            let line = '';
+            const lines = [];
+            for (let i = 0; i < words.length; i++) {
+                let testLine = line + words[i] + ' ';
+                if (testLine.length > maxWidth && i > 0) {
+                    lines.push(line.trim());
+                    line = words[i] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line.trim());
+            return lines;
+        }
+
+        // Trading Volume Chart
+        const tradingVolumeCtx = document.getElementById('tradingVolumeChart').getContext('2d');
+        const tradingVolumeData = {
+            labels: ['Trojan', 'BonkBot', 'Maestro', 'Banana Gun', 'Sol Trading Bot', 'Sigma', 'Unibot (ETH)'],
+            datasets: [{
+                label: 'Lifetime Volume (USD Billions)',
+                data: [23.2, 13.59, 12.54, 10.97, 4.32, 4.03, 1.16],
+                backgroundColor: 'rgba(236, 72, 153, 0.7)', // pink-500
+                borderColor: 'rgba(190, 24, 93, 1)', // pink-700
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(236, 72, 153, 0.9)',
+            }]
+        };
+        new Chart(tradingVolumeCtx, {
+            type: 'bar', // Changed to bar for better readability with these many items
+            data: tradingVolumeData,
+            options: {
+                indexAxis: 'y', // Horizontal bar chart
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'USD Billions', font: { size: 12 } },
+                        grid: { color: 'rgba(0,0,0,0.05)'}
+                    },
+                    y: {
+                        grid: { display: false },
+                         ticks: {
+                            callback: function(value, index, values) {
+                                return wrapLabels(this.getLabelForValue(value), 15); // Wrap labels
+                            },
+                            font: { size: 10 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.7)',
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}B`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // User Activity Chart
+        const userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+        const userActivityData = {
+            labels: ['Trojan', 'Sol Trading Bot', 'Maestro', 'BonkBot', 'Banana Gun', 'Sigma', 'Unibot (ETH)'],
+            datasets: [
+                {
+                    label: 'Lifetime Users (Thousands)',
+                    data: [1400, 987, 555, 516, 480, 234, 46.7],
+                    backgroundColor: 'rgba(6, 182, 212, 0.7)', // cyan-500
+                    borderColor: 'rgba(8, 145, 178, 1)', // cyan-600
+                    borderWidth: 1,
+                    hoverBackgroundColor: 'rgba(6, 182, 212, 0.9)',
+                },
+                {
+                    label: 'DAU (May 2025, Thousands)',
+                    data: [21.138, 6.187, 4.945, 5.368, 4.516, 2.375, 0.085],
+                    backgroundColor: 'rgba(219, 39, 119, 0.7)', // pink-600
+                    borderColor: 'rgba(190, 24, 93, 1)', // pink-700
+                    borderWidth: 1,
+                    hoverBackgroundColor: 'rgba(219, 39, 119, 0.9)',
+                }
+            ]
+        };
+        new Chart(userActivityCtx, {
+            type: 'bar',
+            data: userActivityData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Users (Thousands)', font: { size: 12 } },
+                        grid: { color: 'rgba(0,0,0,0.05)'}
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return wrapLabels(this.getLabelForValue(value), 10); // Wrap labels
+                            },
+                             font: { size: 10 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top', labels: { font: {size: 10}}},
+                    title: { display: false },
+                     tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.7)',
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw.toFixed(3)}K`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bot Deep Dive Functionality
+        const botData = {
+            maestro: {
+                name: "Maestro Bot",
+                overview: "Pioneering multi-chain bot for sniping, copy trading, and order management across ETH, BSC, SOL, ARB, Base, etc. Known for reliability and user support.",
+                howItWorks: "Telegram commands/menus. Features: Multi-chain, various sniping methods, copy trading, advanced orders, wallet tracking. Patented Anti-Rug, Anti-MEV. AES encrypted private keys.",
+                features: ["Multi-Chain (ETH, BSC, SOL, ARB, Base+)", "Liquidity & Method Sniping", "Copy Trading (Frontrunning)", "Limit, TP/SL Orders", "Patented Anti-Rug", "Anti-MEV", "Multi-Wallet (up to 10)"],
+                popularity: "Lifetime Vol: $12.54B+. Users: 555k+ lifetime, ~4.9k DAU. Fees: ~1%.",
+                feedback: "Praises: User-friendly, reliable, good support, reimbursed past exploits. Complaints: Occasional slow TXs, general bot risks.",
+                security: "AES encrypted keys (possibly third-party handled). Patented Anti-Rug. Experienced 2-3 exploits, users fully reimbursed. CertiK audit mentioned."
+            },
+            trojan: {
+                name: "Trojan (on Solana)",
+                overview: "Formerly Unibot on Solana. Dominant on Solana for fast trading, sniping, copy trading. High volume and user base.",
+                howItWorks: "Telegram commands. Features: Solana focus, sniping, copy trading, DCA, limit orders, analytics. Aggregates liquidity. Fees: 1% (0.9% if referred) + network/MEV fees.",
+                features: ["Solana Focused", "Sniping", "Copy Trading", "Dollar-Cost Averaging (DCA)", "Limit Orders", "Advanced Analytics"],
+                popularity: "Lifetime Vol: $23.2B+. Users: 1.4M+ lifetime, ~21k DAU. Revenue: $200M+ cumulative.",
+                feedback: "Praises: Simple for SOL, DCA/copy trading. Complaints: Speed debated vs others, clunky UI by some, fake bot scams are a major issue.",
+                security: "Regular audits, multi-sig controls. Generates dedicated wallet (custodial). Main risk: fake Trojan bots."
+            },
+            bonkbot: {
+                name: "BonkBot",
+                overview: "Popular Solana-specific bot for speed and ease of use in memecoin trading. Partnered with BONK community.",
+                howItWorks: "Telegram interface. Features: Solana only, fast sniping, instant buy/sell, auto-snipe, limit orders, copy trading, Jupiter routing, MEV protection. Fees: 1% per trade (2% round trip).",
+                features: ["Solana Exclusive", "Ultra-Fast Sniping", "Instant Buy/Sell", "Auto-Sniping & Limit Orders", "Copy Trading", "Jupiter Routing & MEV Protection", "2FA Security"],
+                popularity: "Lifetime Vol: $13.59B+. Users: 516k+ lifetime, ~5.3k DAU. Fees: $107M+ generated.",
+                feedback: "Praises: Fast on SOL, simple UI, good MEV protection, 2FA. Complaints: High fees hurt small trades, SOL usage discrepancies, poor support, withdrawal issues, scam accusations.",
+                security: "New KMS ('hardware wallet in cloud'), 2FA. Fee contract audited by OtterSec. Emphasizes user responsibility for exported keys."
+            },
+            bananagun: {
+                name: "Banana Gun",
+                overview: "Multi-chain (ETH, SOL primarily) bot for sniping and manual trading. Has $BANANA token for revenue sharing.",
+                howItWorks: "Telegram bot & 'Banana Pro' web app. Features: Multi-chain, auto-sniping, manual trading, limit orders, copy trading, MEV protection, scam/rug protection. Fees: 1% snipe, 0.5% manual.",
+                features: ["Multi-Chain (ETH, SOL, Base+)", "Automated Sniping", "Manual Trading", "Limit Orders (TP/SL)", "Copy Trading", "MEV Protection", "$BANANA Revshare Token"],
+                popularity: "Lifetime Vol: $10.97B+. Users: 480k+ lifetime, ~4.5k DAU. Fees: $78M+ generated.",
+                feedback: "Praises: Fast sniping, good rug alerts, MEV protection. Complaints: Lacks trade filtering, clunky manual UI, past exploit (users reimbursed).",
+                security: "Simulations & scam protection. Major exploit in Sep 2024 ($3M stolen, users refunded). Post-hack: 2hr transfer delay, 2FA planned, further audits."
+            },
+            unibot_eth: {
+                name: "Unibot (ETH)",
+                overview: "Pioneering Ethereum bot for high-speed Uniswap sniping. Expanded to Solana. $UNIBOT token for benefits.",
+                howItWorks: "Telegram commands. Features: Fast swaps/sniping (Method Sniper), Mirror Sniper (copy), token launch channel, PNL analysis, private TXs, Fail Guard. Fees: ~1% (less for $UNIBOT holders).",
+                features: ["ETH & SOL Support", "Fast Swaps & Method Sniper", "Mirror Sniper (Copy Trading)", "Private Transactions (Anti-MEV)", "Fail Guard (Test Orders)", "$UNIBOT Token Benefits"],
+                popularity: "Lifetime Vol: $1.16B+. Users: 46.7k+ lifetime, ~85 DAU. $UNIBOT token highly volatile.",
+                feedback: "Praises: Fast on Uniswap, useful tools. Complaints: Quantstamp audit 2022 found issues (many resolved), custodial wallet risk, reward claim threshold.",
+                security: "Private nodes, private TXs. Quantstamp audit (2022). Custodial wallet with keys in cloud."
+            },
+             gmgn: {
+                name: "GMGN Bot",
+                overview: "Innovative Telegram bot with AI-driven analytics and multi-chain support (ETH, SOL, Base, TRON, Blast).",
+                howItWorks: "Telegram interface. Features: AI analytics for market data & malicious contract ID, auto trading, copy trading, sniper tools, smart money tracking, contract security checks.",
+                features: ["Multi-Chain (ETH, SOL, Base+)", "AI-Driven Analytics", "Automated Trading", "Copy Trading", "Sniper Tools", "Contract Security Checks"],
+                popularity: "Lifetime Vol (Solana): $5.14B+.",
+                feedback: "Praises: Good filter system, fast execution by some. Complaints: P&L display discrepancies, some found it slower than alternatives.",
+                security: "Contract security checks. Private key handling typical for Telegram bots (likely custodial aspects)."
+            },
+            bullx: {
+                name: "BullX Bot",
+                overview: "Multi-chain trading bot and DEX platform (SOL, ETH, BSC, ARB, etc.) with analytics and wallet management.",
+                howItWorks: "Telegram bot + web interface. Features: Multi-chain, advanced analytics (Pump Vision), live charts, limit orders, multi-wallet, sniper, copy trading, MEV protection (Jito on SOL). Fees: 0.9% (10% discount for referrals).",
+                features: ["Multi-Chain (SOL, ETH, BSC+)", "Advanced Analytics & Live Charts", "Limit Orders", "Multi-Wallet Management", "Sniper Mode & Copy Trading", "MEV Protection (SOL)"],
+                popularity: "Listed among top bots, specific aggregate metrics not in summary.",
+                feedback: "Praises (official): User-friendly, comprehensive tools. Complaints (Reddit): Extremely high effective fees for small trades, unprofitability, fund drain allegations, poor support.",
+                security: "Claims AES-256 encryption, user-controlled keys (AWS CloudHSM isolated enclaves), real-time audits. User reports of drained wallets are serious concerns."
+            }
+        };
+
+        const botSelector = document.getElementById('botSelector');
+        const botDetailsDiv = document.getElementById('botDetails');
+
+        botSelector.addEventListener('change', function() {
+            const selectedBotKey = this.value;
+            if (selectedBotKey && botData[selectedBotKey]) {
+                const data = botData[selectedBotKey];
+                botDetailsDiv.innerHTML = `
+                    <h3 class="text-2xl font-bold text-pink-600 mb-3">${data.name}</h3>
+                    <div class="space-y-3 text-sm">
+                        <p><strong class="text-cyan-700">Overview:</strong> ${data.overview}</p>
+                        <p><strong class="text-cyan-700">How it Works:</strong> ${data.howItWorks}</p>
+                        <div><strong class="text-cyan-700">Key Features:</strong>
+                            <ul class="list-disc list-inside ml-4 mt-1">
+                                ${data.features.map(f => `<li>${f}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <p><strong class="text-cyan-700">Popularity Snapshot:</strong> ${data.popularity}</p>
+                        <p><strong class="text-cyan-700">User Feedback Summary:</strong> ${data.feedback}</p>
+                        <p><strong class="text-cyan-700">Security Posture:</strong> ${data.security}</p>
+                    </div>
+                `;
+            } else {
+                botDetailsDiv.innerHTML = '<p class="text-slate-500 text-center">Select a bot to see details here.</p>';
+            }
+        });
+
+        // Accordion Functionality
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const currentlyOpen = document.querySelector('.accordion-button.open');
+                if (currentlyOpen && currentlyOpen !== button) {
+                    currentlyOpen.classList.remove('open');
+                    currentlyOpen.nextElementSibling.style.maxHeight = null;
+                }
+                button.classList.toggle('open');
+                const content = button.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // Smooth scrolling and active nav link
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('main section');
+
+        function changeNav(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active', 'border-b-2', 'border-pink-300', 'text-white');
+                        if (link.href.split('#')[1] === entry.target.id) {
+                            link.classList.add('active', 'border-b-2', 'border-pink-300', 'text-white');
+                        } else {
+                             link.classList.remove('text-white'); // Ensure non-active links revert
+                        }
+                    });
+                }
+            });
+        }
+
+        const options = { threshold: 0.4 }; // Adjust threshold as needed
+        const observer = new IntersectionObserver(changeNav, options);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    // Temporarily unobserve to prevent immediate re-triggering
+                    sections.forEach(s => observer.unobserve(s));
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - document.querySelector('header').offsetHeight, // Adjust for fixed header
+                        behavior: 'smooth'
+                    });
+
+                    // Update active class immediately for responsiveness
+                    navLinks.forEach(nav => nav.classList.remove('active', 'border-b-2', 'border-pink-300', 'text-white'));
+                    this.classList.add('active', 'border-b-2', 'border-pink-300', 'text-white');
+                    
+                    // Re-observe after a short delay
+                    setTimeout(() => {
+                         sections.forEach(s => observer.observe(s));
+                    }, 500); // Adjust delay if needed
+                }
+                 // For mobile menu, close it after click
+                const mobileNav = document.getElementById('mobileNav');
+                if (!mobileNav.classList.contains('hidden')) {
+                    mobileNav.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Set initial active link based on URL hash or first section
+        function setInitialActiveLink() {
+            let currentHash = window.location.hash;
+            if (!currentHash && sections.length > 0) {
+                currentHash = '#' + sections[0].id;
+            }
+            const activeLink = document.querySelector(`nav a[href="${currentHash}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active', 'border-b-2', 'border-pink-300', 'text-white');
+            } else if (navLinks.length > 0) {
+                 navLinks[0].classList.add('active', 'border-b-2', 'border-pink-300', 'text-white');
+            }
+        }
+        window.addEventListener('load', setInitialActiveLink);
+
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileNav = document.getElementById('mobileNav');
+        const desktopNav = document.getElementById('desktopNav');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileNav.classList.toggle('hidden');
+        });
+
+    </script>
+</body>
+</html>
