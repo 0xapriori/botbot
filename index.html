@@ -13,6 +13,8 @@
         - Comparative View - Features: HTML Table. Goal: Side-by-side feature comparison. Interaction: Static. Justification: Direct comparison.
         - Comparative View - Profitability/Feedback: Ranked lists/simple bars. Goal: Visualize subjective rankings. Interaction: Hover. Justification: Quick understanding of sentiment.
         - Risks: Accordion. Goal: Organize risk info. Interaction: Expand/collapse. Justification: Digestible presentation.
+        - Full Report: HTML formatted text. Goal: Provide full source document. Interaction: Scrolling. Justification: User request for full report access.
+        - Sources: HTML formatted text. Goal: Address user request for sources. Interaction: Scrolling. Justification: Lists cited reference numbers due to missing bibliography in source doc.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -77,6 +79,55 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        .report-content h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #ec4899; /* text-pink-600 */
+            margin-bottom: 0.75rem; /* mb-3 */
+            margin-top: 1.5rem; /* mt-6 */
+        }
+         .report-content h4 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #0891b2; /* text-cyan-600 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            margin-top: 1rem; /* mt-4 */
+        }
+        .report-content p, .report-content li {
+            margin-bottom: 0.75rem; /* mb-3 */
+            line-height: 1.625; /* leading-relaxed */
+        }
+        .report-content ul {
+            list-style-type: disc;
+            margin-left: 1.5rem; /* ml-6 */
+        }
+        .report-content ol {
+            list-style-type: decimal;
+            margin-left: 1.5rem; /* ml-6 */
+        }
+        .report-content table {
+            min-width: 100%;
+            divide-y: divide-slate-200;
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .report-content th {
+            background-color: #06b6d4; /* bg-cyan-500 */
+            color: white;
+            padding: 0.75rem 1rem; /* px-4 py-3 */
+            text-align: left;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 500; /* font-medium */
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* tracking-wider */
+        }
+        .report-content td {
+            padding: 0.5rem 1rem; /* px-4 py-2 */
+            font-size: 0.875rem; /* text-sm */
+            border-bottom: 1px solid #e2e8f0; /* divide-slate-200 */
+        }
+        .report-content tbody tr:nth-child(even) {
+            background-color: #f8fafc; /* bg-slate-50 */
+        }
     </style>
 </head>
 <body class="bg-pink-50 text-slate-800">
@@ -91,14 +142,16 @@
                     </svg>
                 </button>
             </div>
-            <nav id="desktopNav" class="hidden md:flex items-center justify-center space-x-2 sm:space-x-4 py-2">
-                <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Overview</a>
-                <a href="#understanding-bots" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Understanding Bots</a>
-                <a href="#market-leaders" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Market Leaders</a>
-                <a href="#bot-deep-dive" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Bot Deep Dive</a>
-                <a href="#comparative-view" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Comparisons</a>
-                <a href="#risks" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Risks & Considerations</a>
-                <a href="#conclusion" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 border-cyan-300">Conclusion</a>
+            <nav id="desktopNav" class="hidden md:flex items-center justify-center flex-wrap space-x-1 sm:space-x-2 py-2">
+                <a href="#overview" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Overview</a>
+                <a href="#understanding-bots" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Understanding Bots</a>
+                <a href="#market-leaders" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Market Leaders</a>
+                <a href="#bot-deep-dive" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Bot Deep Dive</a>
+                <a href="#comparative-view" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Comparisons</a>
+                <a href="#risks" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Risks</a>
+                <a href="#conclusion" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Conclusion</a>
+                <a href="#full-report" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Full Report</a>
+                <a href="#sources" class="nav-link px-2 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-cyan-700 border-cyan-300">Sources</a>
             </nav>
         </div>
         <div id="mobileNav" class="md:hidden hidden bg-cyan-600">
@@ -110,6 +163,8 @@
                 <a href="#comparative-view" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Comparisons</a>
                 <a href="#risks" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Risks & Considerations</a>
                 <a href="#conclusion" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Conclusion</a>
+                <a href="#full-report" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Full Report</a>
+                <a href="#sources" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-cyan-700 border-cyan-300">Sources</a>
             </div>
         </div>
     </header>
@@ -348,7 +403,7 @@
             </div>
         </section>
 
-        <section id="conclusion" class="scroll-mt-20">
+        <section id="conclusion" class="mb-12 scroll-mt-20">
             <h2 class="text-3xl font-bold text-cyan-700 mb-6">Conclusion & Future Outlook</h2>
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <p class="mb-4 text-lg leading-relaxed">The Telegram trading bot market is a rapidly evolving space, offering convenience but also significant challenges. Security, user profitability transparency, and regulatory ambiguity are key areas needing attention. The future likely holds enhanced security measures, a greater focus on verifiable user P&L, deeper AI integration, improved cross-chain functionality, and eventual regulatory clarity.</p>
@@ -366,6 +421,469 @@
                 </div>
             </div>
         </section>
+
+        <section id="full-report" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Full Report: The Evolving Landscape of Telegram Trading Bots</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg report-content">
+                
+                <h3>I. Executive Summary</h3>
+                <p>The ecosystem of Telegram trading bots has witnessed explosive growth, transforming from niche tools into significant players within the cryptocurrency trading landscape. These automated systems, operating within the widely adopted Telegram messaging application, offer users the ability to execute trades, snipe new token launches, copy strategies of successful traders, and access real-time market data with unprecedented convenience.[1, 2] This report delves into the multifaceted world of Telegram trading bots, examining their popularity, operational mechanics, user-perceived profitability, and the critical risks associated with their use. Key findings reveal a market dominated by a few powerful bots, particularly those leveraging the speed and low transaction costs of blockchains like Solana, especially for high-velocity activities such as memecoin trading.[3, 4] This concentration suggests an emerging "winner-takes-most" dynamic, where new entrants face considerable challenges unless they offer unique technological innovations or cater to previously unaddressed market segments.</p>
+                <p>A significant observation is the often-opaque relationship between the substantial revenues generated *by* these bot platforms through fees and the actual, verifiable profitability *for* their average users.[3] While platforms can demonstrate impressive fee generation (e.g., Trojan reportedly accrued $109 million in fees over a six-month period [3]), tracking individual user profit and loss remains exceedingly difficult. This lack of transparency is a critical concern for overall market integrity. Security remains a paramount issue, underscored by notable incidents such as the Banana Gun exploit, which, despite user reimbursements, highlighted vulnerabilities within the ecosystem.[5] The regulatory environment for these bots is still nascent and often ambiguous, varying across jurisdictions and creating further complexities for developers and users alike. Dominant trends include the rapid ascent of Solana-based bots, driven by the platform's performance characteristics, and an increasing sophistication in bot features, moving beyond simple buy/sell commands to include advanced risk management and analytical tools.</p>
+
+                <h3>II. Introduction to Telegram Trading Bots</h3>
+                <h4>A. What are Telegram Trading Bots? Evolution and Market Growth.</h4>
+                <p>Telegram trading bots are automated software programs that operate within the Telegram messaging application, allowing users to execute cryptocurrency trades, monitor market movements, and manage their portfolios directly through chat commands or interactive menus.[1, 6] Their evolution tracks the broader maturation of the cryptocurrency market and the increasing demand for accessible, efficient trading tools. Initially, many bots served simpler functions like price alerts or basic order execution. However, they have rapidly evolved into sophisticated platforms offering a wide array of functionalities, including automated sniping of new token launches, copy trading, setting complex order types like limit and stop-loss orders, and accessing on-chain analytics.[1, 3]</p>
+                <p>The growth of this market is intrinsically linked to Telegram's massive user base, which stood at 950 million monthly active users as of July 2024.[2, 7] Telegram has become a central communication hub for the global crypto community, making it a natural environment for trading-related applications to flourish.[2] The platform's robust API and bot-friendly architecture have facilitated this development, allowing developers to build and deploy increasingly complex trading solutions.[8] The global crypto bot market, of which Telegram bots are a significant and growing segment, is projected for substantial expansion, with one report anticipating growth from $1.3 billion in 2023 to $1.8 billion by 2030.[2, 9] This growth is fueled by the allure of automated trading, which promises speed, efficiency, and the ability to operate 24/7, capitalizing on market opportunities that manual traders might miss.</p>
+                <p>The ease of use offered by Telegram bots is a significant factor in their adoption. A 2024 survey by CryptoCompare indicated that 72% of first-time traders found Telegram bots easier to use compared to other trading platforms.[9] This accessibility, combined with advanced features, positions Telegram trading bots as a transformative force in how individuals interact with cryptocurrency markets.</p>
+
+                <h4>B. Types of Telegram Trading Bots.</h4>
+                <p>The Telegram trading bot ecosystem is diverse, with various types of bots catering to different trading strategies, asset classes, and user needs. While cryptocurrency trading bots are the most prominent, other specialized bots also exist.</p>
+                <ul>
+                    <li><strong>Cryptocurrency Trading Bots:</strong> This is the largest and most developed category. These bots primarily facilitate trading on decentralized exchanges (DEXs) and, in some cases, centralized exchanges (CEXs). Their core offerings typically include:
+                        <ul>
+                            <li><strong>Sniping Bots:</strong> Designed to automatically buy newly listed tokens the instant liquidity is added to a DEX pool, aiming to secure early-mover advantages.[1, 3] Examples include Maestro, Unibot, and Banana Gun.</li>
+                            <li><strong>Copy Trading Bots:</strong> Allow users to automatically replicate the trades of wallets identified as successful or profitable.[1] Many leading bots like Maestro, Trojan, and GMGN offer this feature.</li>
+                            <li><strong>Limit Order & Advanced Order Bots:</strong> Enable users to set specific price points for buying or selling, including stop-loss and take-profit orders, which are crucial for risk management.[1, 3] BullX and Banana Gun are examples.</li>
+                            <li><strong>General DEX Aggregators/Interfaces:</strong> Provide a simplified interface for trading on various DEXs, often with features like multi-chain support and wallet management.[1, 6]</li>
+                        </ul>
+                    </li>
+                    <li><strong>Signal Bots:</strong> These bots provide users with trading signals, which are suggestions to buy or sell a particular asset based on technical analysis, market trends, or proprietary algorithms.[2, 9] Cornix is a well-known example that specializes in automating trade execution based on signals from Telegram channels.[9, 10]</li>
+                    <li><strong>Arbitrage Bots:</strong> These bots are programmed to identify and exploit price discrepancies of the same asset across different exchanges or liquidity pools, buying low on one and selling high on another simultaneously.[7, 9, 11]</li>
+                    <li><strong>Market-Making Bots:</strong> These aim to enhance market liquidity by placing both buy and sell orders for a specific asset, profiting from the bid-ask spread.[9] While less common as standalone Telegram bots for retail users, the underlying principles are used in more sophisticated institutional tools.</li>
+                    <li><strong>News and Analysis Bots:</strong> These bots aggregate and deliver real-time market news, sentiment analysis, and updates directly within Telegram, helping traders stay informed.[9]</li>
+                    <li><strong>Airdrop Farming Bots:</strong> A newer category, these bots automate the tasks required to qualify for cryptocurrency airdrops across multiple blockchains and protocols.[9] LootBot is an example that supports farming on chains like zkSync, Linea, and Base.[9]</li>
+                    <li><strong>Gaming Bots:</strong> While the user query mentioned gaming bots, the provided research material focuses overwhelmingly on financial trading bots. BonkBot has origins in a JavaScript library for the web game Bonk.io ([12]), but its current prominent application is as a Solana-based cryptocurrency trading bot. Dedicated Telegram bots for in-game asset trading or gaming-related financial activities are not extensively detailed in the current research, suggesting this may be a less developed or less publicly documented segment compared to crypto trading bots.</li>
+                </ul>
+                <p>The proliferation of these specialized bot types indicates a maturing market. Users are increasingly seeking tools tailored to niche strategies and sophisticated trading needs, moving beyond basic buy and sell functionalities. This evolution is driven by user demand for more refined instruments to navigate the complexities of diverse crypto markets, from memecoin sniping to automated airdrop participation and MEV (Maximal Extractable Value) protection.</p>
+
+                <h4>C. General Benefits and Common Use Cases.</h4>
+                <p>Telegram trading bots offer a compelling array of benefits that cater to both novice and experienced traders, streamlining interaction with the often-complex cryptocurrency markets. Their integration within a familiar messaging app significantly lowers the barrier to entry for many users.[1, 9]</p>
+                <p><strong>Key Benefits:</strong></p>
+                <ul>
+                    <li><strong>Automation and Efficiency:</strong> Bots can execute trades based on predefined parameters 24/7, eliminating the need for constant manual monitoring and allowing traders to capitalize on opportunities even while asleep or away from their screens.[1, 2, 11] This automation handles repetitive tasks and can execute complex strategies with precision.</li>
+                    <li><strong>Speed and Execution:</strong> In volatile crypto markets, speed is paramount. Bots can react to market changes and execute trades much faster than a human can, which is crucial for strategies like sniping new token launches or exploiting fleeting arbitrage opportunities.[1, 2, 3]</li>
+                    <li><strong>Reduced Emotional Trading:</strong> By adhering strictly to programmed logic and pre-set parameters, trading bots remove emotional decision-making (like fear or greed) from the trading process, leading to more disciplined execution.[9, 11]</li>
+                    <li><strong>Accessibility and Convenience:</strong> Operating directly within Telegram, these bots are accessible on mobile devices and desktops without requiring users to navigate multiple exchange websites or complex wallet browser extensions.[1, 3] Simple text commands (e.g., `/buy`, `/sell`, `/snipe`) make interaction intuitive.[2, 7]</li>
+                    <li><strong>Access to On-Chain Data and Alerts:</strong> Many bots provide real-time market insights, wallet tracking, whale movement alerts, and contract analysis directly within the Telegram interface, empowering users with timely information for decision-making.[1]</li>
+                    <li><strong>Multi-Wallet and Multi-Chain Management:</strong> Advanced bots allow users to manage multiple wallets and trade across various blockchain networks simultaneously from a single interface, a feature not commonly found in standard DEX UIs.[1]</li>
+                    <li><strong>Cost-Effectiveness (Potentially):</strong> While fees vary, many bots offer free basic plans or more affordable pricing models compared to some standalone trading platforms or subscription services.[9]</li>
+                </ul>
+                <p><strong>Common Use Cases:</strong></p>
+                <ul>
+                    <li><strong>Sniping New Token Launches:</strong> This is a primary use case, where bots are configured to buy tokens the moment they become available on a DEX, often targeting memecoins or tokens with high initial hype.[1, 3]</li>
+                    <li><strong>Copy Trading (Social Trading):</strong> Users can configure bots to automatically mirror the trades of selected successful or influential wallets, leveraging the expertise of others.[1, 9]</li>
+                    <li><strong>Automated DEX Trading:</strong> Bots simplify interaction with DEXs, handling tasks like adjusting gas fees, slippage tolerance, and executing swaps across different liquidity pools.[1]</li>
+                    <li><strong>Arbitrage Trading:</strong> Bots can be used to automatically detect and execute trades based on price differences for the same asset across various exchanges or pools.[9]</li>
+                    <li><strong>Portfolio Management and Monitoring:</strong> Features like PNL (Profit and Loss) analysis, balance tracking, and price alerts help users manage their crypto holdings more effectively.[6, 13]</li>
+                    <li><strong>Risk Management:</strong> Setting automated stop-loss and take-profit orders helps manage potential downsides and lock in gains without manual intervention.[1, 13]</li>
+                    <li><strong>Airdrop Farming:</strong> Specialized bots automate the interactions required to qualify for token airdrops from new protocols.[9]</li>
+                </ul>
+                <p>The convenience of Telegram, combined with these powerful trading functionalities, explains the rapid adoption of these bots. They effectively bridge the gap between the social nature of crypto communities and the technical demands of active trading.</p>
+
+                <h3>III. Market Landscape & Popularity Analysis</h3>
+                <h4>A. Top Telegram Trading Bots Overview:</h4>
+                <p>The Telegram trading bot market is vibrant and competitive, with a handful of platforms capturing the lion's share of trading volume and user activity. These leading bots have distinguished themselves through a combination of robust feature sets, multi-chain capabilities, perceived reliability, and strong community engagement. Based on consistent mentions across multiple data sources, particularly those tracking on-chain activity and user metrics, the most prominent bots currently include Maestro, Trojan (formerly Unibot on Solana), BonkBot, Banana Gun, and Unibot (the original Ethereum version). Other significant players making inroads include Sol Trading Bot, GMGN, BullX, Mizar, and Cornix, each often specializing in particular niches or offering unique value propositions.[1, 2, 3, 4, 7, 9] The landscape is dynamic, with new bots emerging and existing ones rapidly evolving to meet user demands for faster execution, broader chain support, and more sophisticated trading tools.</p>
+                
+                <h4>B. Popularity Metrics</h4>
+                <p>The popularity of Telegram trading bots can be gauged through several key metrics: trading volume, daily active users (DAU), and mindshare across social media and community platforms. Quantitative data, primarily sourced from on-chain analytics platforms like Dune Analytics, provides insights into market activity, while qualitative data from social channels offers context on user sentiment and perceived value.</p>
+
+                <h5>1. Trading Volume Analysis:</h5>
+                <p>Trading volume is a critical indicator of a bot's adoption and the scale of financial activity it facilitates. The data reveals that a significant concentration of trading volume occurs on a few leading bots, with a notable trend towards Solana-based bots, especially during periods of high memecoin activity.</p>
+                <p>The top five bots by historical trading volume are consistently cited as Trojan, BonkBot, Maestro, Banana Gun, and Sol Trading Bot.[3, 4] Much of their recent volume, particularly in late 2024 and early 2025, has been concentrated on the Solana blockchain, driven by its low fees and high transaction speeds conducive to memecoin trading and sniping activities.[3, 4]</p>
+                <ul>
+                    <li><strong>Trojan</strong> has demonstrated formidable volume, reportedly hitting a record $363 million in a single day (January 20, 2025) and boasting a lifetime volume exceeding $23.2 billion as of May 2025.[14, 15]</li>
+                    <li><strong>BonkBot</strong> also saw massive daily volumes, exceeding $250 million in March 2024, and has a lifetime volume of approximately $13.59 billion.[16, 17]</li>
+                    <li><strong>Maestro</strong> maintains a strong presence with a lifetime volume of around $12.54 billion and significant daily activity across multiple chains.[18, 19]</li>
+                    <li><strong>Banana Gun</strong> shows a lifetime volume of nearly $11 billion, with considerable daily trading across Ethereum, Solana, and Base.[20]</li>
+                    <li><strong>Sol Trading Bot</strong> focuses on Solana and has processed a lifetime volume of over $4.32 billion.[21]</li>
+                    <li><strong>Unibot (ETH)</strong>, one of the earlier prominent bots, has a lifetime volume of over $1.16 billion.[22]</li>
+                    <li><strong>Sigma</strong>, another multi-chain bot, shows a lifetime volume of over $4.03 billion.[23]</li>
+                </ul>
+                <p>The overall Telegram bot market experiences peaks and troughs in volume, often correlated with broader crypto market sentiment and specific narratives like memecoin seasons, which saw a surge around January 2025.[3] The rise of The Open Network (TON) as a platform for bots like <strong>Blum</strong> is also noteworthy, with Blum bots reportedly accounting for 25% of TON's on-chain volume in April 2025, generating around $10 million in weekly trading volume at that time.[24] This indicates that while Ethereum and Solana currently dominate, other ecosystems are emerging.</p>
+                
+                <div class="overflow-x-auto my-6">
+                    <table>
+                        <caption><strong>Table 1: Trading Volume Leaderboard</strong></caption>
+                        <thead>
+                            <tr>
+                                <th>Bot Name</th>
+                                <th>Primary Blockchain(s)</th>
+                                <th>Lifetime Volume (USD Billions)</th>
+                                <th>Avg. Daily Volume (USD Millions, 7d MA, May 2025)</th>
+                                <th>Peak Daily Volume (USD Millions) & Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Trojan</td><td>Solana, ETH, BSC</td><td>$23.2+</td><td>$35.68</td><td>$363 (Jan 20, 2025)</td></tr>
+                            <tr><td>BonkBot</td><td>Solana</td><td>$13.59+</td><td>$14.03</td><td>$251+ (Mar 19, 2024)</td></tr>
+                            <tr><td>Maestro</td><td>ETH, BSC, SOL, Base, ARB etc</td><td>$12.54+</td><td>$12.21</td><td>~$76 (in a 7-day period, May 2025)</td></tr>
+                            <tr><td>Banana Gun</td><td>ETH, SOL, Base, BSC, Sonic</td><td>$10.97+</td><td>$14.78</td><td>N/A</td></tr>
+                            <tr><td>Sol Trading Bot</td><td>Solana</td><td>$4.32+</td><td>$4.05</td><td>N/A</td></tr>
+                            <tr><td>Sigma</td><td>ETH, Base, AVAX, BSC</td><td>$4.03+</td><td>$6.62</td><td>N/A</td></tr>
+                            <tr><td>Unibot (ETH)</td><td>Ethereum, Solana</td><td>$1.16+</td><td>$0.07</td><td>N/A</td></tr>
+                            <tr><td>Photon</td><td>Solana, ETH, Blast, Base</td><td>$40+ (on Solana alone)</td><td>N/A</td><td>N/A</td></tr>
+                            <tr><td>MevX</td><td>ETH, SOL, BNB, TRON, Base</td><td>$0.7+</td><td>N/A</td><td>N/A</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-slate-500">*Note: Volume data is dynamic and based on available Dune Analytics dashboards around May 2025. "N/A" indicates data not readily available. Photon's $40B+ volume is a significant claim.[25]*</p>
+                </div>
+
+                <h5>2. Daily Active Users (DAU) Analysis:</h5>
+                <p>Daily Active Users (DAU) and lifetime user counts provide insights into a bot's reach, user retention, and overall engagement. Trends in DAU can often correlate with market events, new feature launches, or airdrop campaigns.</p>
+                <ul>
+                    <li><strong>Trojan</strong> reports a substantial user base, with over 1.4 million lifetime users and around 21,000 active users in a 24-hour period in May 2025.[15, 27]</li>
+                    <li><strong>Maestro</strong> has approximately 555,000 lifetime users, with daily active users hovering around 1,100-5,000 in May 2025, though earlier reports cited around 15,000 active users.[2, 7, 18, 19]</li>
+                    <li><strong>BonkBot</strong> has over 516,000 lifetime users, with daily active users around 1,500-5,300 in May 2025.[17, 28]</li>
+                    <li><strong>Banana Gun</strong> shows around 480,000 lifetime users and approximately 3,600-4,500 daily active users in May 2025.[20]</li>
+                    <li><strong>Sol Trading Bot</strong> has the highest reported lifetime users among the Dune-tracked bots at nearly 987,000, with daily active users around 1,900-8,600 in May 2025.[21]</li>
+                    <li><strong>Unibot (ETH)</strong>, one of the earlier bots, attracted over 20,000 active users within its first few months.[7] Its Dune dashboard indicates around 46,700 lifetime users and a much lower recent DAU of 72-85.[22]</li>
+                    <li><strong>Photon</strong> claims over 1.3 million lifetime users.[25]</li>
+                    <li>Other bots like <strong>Mizar</strong> (over 10,000 traders) and <strong>Wagie Bot</strong> (over 5,000 users) also have notable user communities.[2, 7]</li>
+                </ul>
+                <p>It's important to note that "lifetime users" can be defined differently across platforms. The decline in daily active wallets on the TON network, despite spikes in bot activity from platforms like Blum, suggests that high bot usage doesn't always translate to sustained, broad ecosystem engagement.[24]</p>
+
+                <div class="overflow-x-auto my-6">
+                    <table>
+                        <caption><strong>Table 2: User Activity Snapshot</strong></caption>
+                        <thead>
+                            <tr>
+                                <th>Bot Name</th>
+                                <th>Lifetime Users (Approx.)</th>
+                                <th>Daily Active Users (DAU - May 2025, Approx. or 7d MA)</th>
+                                <th>New Users (Daily - May 2025, Approx.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Trojan</td><td>1,400,000+</td><td>21,138 (24h total)</td><td>N/A</td></tr>
+                            <tr><td>Sol Trading Bot</td><td>987,000+</td><td>6,187 (7d MA)</td><td>1,400 - 7,000</td></tr>
+                            <tr><td>Maestro</td><td>555,000+</td><td>4,945 (7d MA)</td><td>97 - 800</td></tr>
+                            <tr><td>BonkBot</td><td>516,000+</td><td>5,368 (7d MA)</td><td>20 - Varies</td></tr>
+                            <tr><td>Banana Gun</td><td>480,000+</td><td>4,516 (7d MA)</td><td>466 (May 19)</td></tr>
+                            <tr><td>Sigma</td><td>234,000+</td><td>2,375 (7d MA)</td><td>124 - 800</td></tr>
+                            <tr><td>Unibot (ETH)</td><td>46,700+</td><td>85 (7d MA)</td><td>N/A</td></tr>
+                            <tr><td>Photon</td><td>1,300,000+</td><td>N/A</td><td>N/A</td></tr>
+                            <tr><td>Mizar</td><td>10,000+</td><td>N/A</td><td>N/A</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-slate-500">*Note: DAU and New User figures can be highly volatile. Data is based on available Dune Analytics dashboards around May 2025.*</p>
+                </div>
+
+                <h5>3. Mindshare Analysis (Social Media & Community):</h5>
+                <p>Mindshare, assessed through social media presence (Twitter/X, Reddit), Telegram group sizes, and overall community sentiment, provides a qualitative but crucial understanding of a bot's perceived popularity, trustworthiness, and user experience.</p>
+                <ul>
+                    <li><strong>Telegram Community Sizes:</strong> Bots often foster large communities. Banana Gun had over 18,000 members at launch.[2, 7] Maestro emphasizes diverse international communities.[13, 19]</li>
+                    <li><strong>Reddit Sentiment:</strong>
+                        <ul>
+                            <li>Bots like <strong>GMGN</strong> and <strong>MagnumTradeBot</strong> receive some positive mentions.[29]</li>
+                            <li><strong>BullX</strong> faces criticism regarding fees and fund drainage.[29, 30, 31]</li>
+                            <li><strong>Trojan</strong> is discussed for Solana trading, with mixed experiences and fake bot warnings.[29, 32, 33, 34]</li>
+                            <li><strong>BonkBot</strong> users report fee issues but praise speed.[35, 36, 37, 38, 39]</li>
+                            <li><strong>Banana Gun</strong> users appreciate sniping and rug alerts but note UI issues.[40]</li>
+                            <li><strong>Maestro</strong> generally has positive sentiment on reliability and support.[41, 42]</li>
+                            <li><strong>Unibot (ETH)</strong> reviews are mixed, sometimes confused with an ad service.[43]</li>
+                            <li><strong>Mizar</strong> discussions cover API issues, fees, and features.[44, 45]</li>
+                        </ul>
+                    </li>
+                    <li><strong>Twitter/X Presence:</strong> Many bots maintain active profiles (e.g., BananaGunBot [46], BONKbot_io [47]).[1, 48]</li>
+                </ul>
+
+                <div class="overflow-x-auto my-6">
+                    <table>
+                        <caption><strong>Table 3: Community & Social Sentiment Overview</strong></caption>
+                        <thead>
+                            <tr>
+                                <th>Bot Name</th>
+                                <th>Telegram Group Members (Approx.)</th>
+                                <th>Twitter Followers (Official, Approx.)</th>
+                                <th>General Reddit Sentiment (Key Themes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Maestro</td><td>Large, multiple intl. groups</td><td>Active</td><td>Generally Positive (Reliability, Support, Reimbursements)</td></tr>
+                            <tr><td>Trojan</td><td>Large</td><td>Active</td><td>Mixed (Solana memecoins; speed/fees debated; fake bot warnings)</td></tr>
+                            <tr><td>BonkBot</td><td>Large</td><td>Active (@BONKbot_io)</td><td>Mixed (Fast for SOL memes, 2FA good; complaints on fees, withdrawals, support)</td></tr>
+                            <tr><td>Banana Gun</td><td>18,000+ (at launch)</td><td>Active (@BananaGunBot)</td><td>Mixed (Fast sniping, rug alerts; lacks filtering, clunky manual UI; past exploit)</td></tr>
+                            <tr><td>Unibot (ETH)</td><td>Active</td><td>Active</td><td>Mixed (Trading bot feedback less prominent; confusion with "Unibots" ad service)</td></tr>
+                            <tr><td>BullX</td><td>Active</td><td>Active</td><td>Largely Negative on Reddit (High fees, fund drain issues, scam accusations)</td></tr>
+                            <tr><td>GMGN</td><td>Active</td><td>Active (GMGN.ai)</td><td>Positive to Mixed (Good filters, fast execution; profit display issues)</td></tr>
+                            <tr><td>Mizar</td><td>Active</td><td>Active</td><td>Mixed (API issues, fee changes; some find profitable strategies)</td></tr>
+                            <tr><td>Cornix</td><td>Active</td><td>Active</td><td>Generally Positive (Signal automation; VIP expensive)</td></tr>
+                        </tbody>
+                    </table>
+                     <p class="text-xs text-slate-500">*Note: Sentiment is subjective. "Active" implies a functional presence.*</p>
+                </div>
+                <p>Mindshare reflects brand awareness and community engagement. The prevalence of scam warnings underscores the need for users to verify official sources.</p>
+
+                <h3>IV. In-Depth Bot Profiles</h3>
+                <p>This section provides detailed profiles of several leading Telegram trading bots, examining their overview, technical workings, popularity metrics, user-perceived profitability, feedback, and security posture.</p>
+                
+                <h4>A. Maestro Bot</h4>
+                <p><strong>1. Overview & Official Links:</strong> Maestro is a pioneering multi-chain bot for sniping, copy trading, and order management.[1, 2, 13, 19] Official Website: `maestrobots.com`.[1, 19, 49] Beware of fakes.[49]</p>
+                <p><strong>2. How it Works:</strong> Multi-chain support (ETH, BSC, SOL, ARB, Base, etc.). Sniping (liquidity, method, auto). Copy trading (frontrunning). Limit, TP/SL orders. Wallet tracking. Patented Anti-Rug, Anti-MEV. AES encrypted keys.[1, 13, 19, 42] Fees ~1%.[50] Referral program. Premium tier.[13, 19, 51]</p>
+                <p><strong>3. Popularity & Performance:</strong> Lifetime Vol: $12.54B+.[18] Users: 555k+ lifetime, ~4.9k DAU.[18]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> Mixed. Features designed for profit, but fees/market impact returns.[41, 42, 52]</p>
+                <p><strong>5. User Feedback:</strong> Generally positive. Praises: User-friendly, reliable, support, reimbursed exploits.[13, 19, 41, 42] Complaints: Slow TXs sometimes, general bot risks.[41, 42, 51]</p>
+                <p><strong>6. Security:</strong> AES encrypted keys. Patented Anti-Rug. Anti-MEV. Experienced 2-3 exploits, users reimbursed.[13, 19, 42, 51] CertiK audit mentioned.[51]</p>
+
+                <h4>B. Trojan (formerly Unibot on Solana)</h4>
+                <p><strong>1. Overview & Official Links:</strong> Dominant on Solana for fast trading, sniping, copy trading.[3, 4, 9, 14, 27, 35, 54] Access via official channels only to avoid scams.[27, 34]</p>
+                <p><strong>2. How it Works:</strong> Solana focus. Sniping, copy trading, DCA, limit orders, analytics. Fees: 1% (0.9% referred) + network/MEV.[9, 27, 35]</p>
+                <p><strong>3. Popularity & Performance:</strong> Lifetime Vol: $23.2B+.[15] Users: 1.4M+ lifetime, ~21k DAU.[15] Revenue: $200M+.[15]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> Mixed. Some report profits,[33] others losses or find it slower. Fees impact small trades.</p>
+                <p><strong>5. User Feedback:</strong> Varied. Praises: Simple for SOL, DCA/copy trading.[27, 33] Complaints: Speed debated, clunky UI, fake bot scams.[33, 34, 35]</p>
+                <p><strong>6. Security:</strong> Regular audits, multi-sig. Generates dedicated wallet (custodial). Main risk: fake Trojan bots.[27, 34, 55]</p>
+
+                <h4>C. BonkBot</h4>
+                <p><strong>1. Overview & Official Links:</strong> Popular Solana bot for speed in memecoin trading. Partnered with BONK.[3, 35, 56, 57] Official Website: `bonkbot.io`.[28, 35, 56] Telegram: verified `bonkbot_bot`.[36, 58]</p>
+                <p><strong>2. How it Works:</strong> Solana only. Fast sniping, instant buy/sell, auto-snipe, limit orders, copy trading, Jupiter routing, MEV protection. Fees: 1% per trade (2% round trip). 10% fees to $BONK burn/DAO. Referral program.[35, 37, 56, 57, 58, 59]</p>
+                <p><strong>3. Popularity & Performance:</strong> Lifetime Vol: $13.59B+.[17] Users: 516k+ lifetime, ~5.3k DAU.[17] Fees generated: $107M+.[17]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> Contentious. Some profit,[35, 37] many find fees (2% round trip) erode profits on small trades.[37, 39, 60]</p>
+                <p><strong>5. User Feedback:</strong> Polarizing. Praises: Fast on SOL, simple UI, MEV protection, 2FA.[35, 37, 56, 57, 61] Complaints: High fees, SOL usage discrepancies, poor support, withdrawal issues, scam accusations.[36, 37, 38, 39]</p>
+                <p><strong>6. Security:</strong> New KMS ('hardware wallet in cloud'), 2FA. Fee contract audited (OtterSec). User responsibility for exported keys.[28, 35, 56, 61, 62]</p>
+
+                <h4>D. Banana Gun</h4>
+                <p><strong>1. Overview & Official Links:</strong> Multi-chain (ETH, SOL primarily) bot for sniping/manual trading. $BANANA token for revshare.[1, 2, 3, 56, 59, 63] Official Website: `bananagun.io`.[1, 40, 46, 56, 63, 64] Twitter: @BananaGunBot.[46]</p>
+                <p><strong>2. How it Works:</strong> Multi-chain. Auto-sniping, manual trading, limit orders, copy trading, MEV protection, scam/rug protection. Fees: 1% snipe, 0.5% manual. $BANANA revshare.[1, 2, 8, 46, 56, 59, 63]</p>
+                <p><strong>3. Popularity & Performance:</strong> Lifetime Vol: $10.97B+.[20] Users: 480k+ lifetime, ~4.5k DAU.[20] Fees generated: $78M+.[20] $BANANA APY ~17.6%.[20]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> $BANANA revshare. Sniping can be profitable but high risk.[3, 40, 59, 63, 64]</p>
+                <p><strong>5. User Feedback:</strong> Positive on sniping. Praises: Fast auto-sniping, rug alerts.[40, 56] Complaints: Lacks filtering, clunky manual UI, past exploit (reimbursed).[5, 40, 56]</p>
+                <p><strong>6. Security:</strong> Simulations & scam protection. Major exploit Sep 2024 ($3M stolen, users refunded). Post-hack: 2hr transfer delay, 2FA planned, audits.[1, 2, 5, 8]</p>
+
+                <h4>E. Unibot (Original Ethereum version & Solana expansion)</h4>
+                <p><strong>1. Overview & Official Links:</strong> Pioneering ETH bot for Uniswap sniping, expanded to SOL. $UNIBOT token.[2, 6, 7, 9, 65, 66] Official Website: `unibot.app` (verify).</p>
+                <p><strong>2. How it Works:</strong> Fast swaps/sniping (Method Sniper), Mirror Sniper (copy), token launch channel, PNL analysis, private TXs, Fail Guard. Fees: ~1% (less for $UNIBOT holders). Revshare. Token burn.[2, 6, 65, 67]</p>
+                <p><strong>3. Popularity & Performance:</strong> Lifetime Vol: $1.16B+.[22] Users: 46.7k+ lifetime, ~85 DAU.[22] $UNIBOT token volatile.[22, 65]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> $UNIBOT revshare. Features aim for an edge. Token price drop impacted holders.</p>
+                <p><strong>5. User Feedback:</strong> Mixed. Praises: Fast on Uniswap, useful tools.[2, 65, 67] Complaints: Quantstamp audit 2022 issues (resolved), custodial wallet risk, reward claim threshold.[43, 67] Often confused with unrelated "Unibots" ad service.[43]</p>
+                <p><strong>6. Security:</strong> Private nodes, private TXs. Quantstamp audit (2022). Custodial wallet (keys in cloud).[6, 65, 67]</p>
+
+                <h4>F. GMGN Bot</h4>
+                <p><strong>1. Overview & Official Links:</strong> AI-driven analytics, multi-chain (ETH, SOL, Base, TRON, Blast).[1, 69] Official Website: `gmgn.ai`.[1, 69]</p>
+                <p><strong>2. How it Works:</strong> AI analytics (market data, malicious contract ID), auto trading, copy trading, sniper tools, smart money tracking, contract security checks.[1, 69]</p>
+                <p><strong>3. Popularity & Performance:</strong> Lifetime Vol (Solana): $5.14B+.[69]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> Mixed. Some praise filters/speed.[29] Others report P&L display discrepancies.[29]</p>
+                <p><strong>5. User Feedback:</strong> Praises: Filter system, fast execution.[29] Complaints: P&L display issues, slower than some alternatives.[29, 32]</p>
+                <p><strong>6. Security:</strong> Contract security checks. Private key handling typical (likely custodial).[1, 69]</p>
+
+                <h4>G. BullX Bot</h4>
+                <p><strong>1. Overview & Official Links:</strong> Multi-chain bot and DEX (SOL, ETH, BSC, ARB, etc.) with analytics.[1, 70] Official Website: `bullx.io` [71] or `bullx-bot.net`.[70]</p>
+                <p><strong>2. How it Works:</strong> Multi-chain. Advanced analytics (Pump Vision), live charts, limit orders, multi-wallet, sniper, copy trading, MEV protection (Jito on SOL). Fees: 0.9% (10% discount for referrals).[1, 70, 72]</p>
+                <p><strong>3. Popularity & Performance:</strong> Listed among top bots.[1]</p>
+                <p><strong>4. Profitability (User Perspective):</strong> Largely negative on Reddit. Fees/slippage erode profits on small trades.[30, 31]</p>
+                <p><strong>5. User Feedback:</strong> Praises (official): User-friendly, comprehensive.[1] Complaints (Reddit): High fees, unprofitability, fund drain allegations, poor support.[30, 31, 73]</p>
+                <p><strong>6. Security:</strong> Claims AES-256 encryption, user-controlled keys (AWS CloudHSM), real-time audits. User reports of drained wallets are serious concerns.[1, 30, 70, 72, 73]</p>
+                <p>The landscape reveals similar core functionalities but differentiators in multi-chain support, security features, UX, fees, and native tokens. Custodial/semi-custodial models are common for ease of use but pose security risks. User feedback, especially from Reddit, offers raw insights but needs cautious interpretation due to potential biases and fake bot scams.</p>
+
+                <h3>V. Comparative Analysis & Rankings</h3>
+                <p>Comparing Telegram trading bots involves assessing them across multiple dimensions: user-perceived profitability, overall user feedback, and feature sets. Rankings are based on a synthesis of available data and qualitative feedback and should be interpreted with caution.</p>
+                <h4>A. Profitability Ranking (Most vs. Least Profitable for Users):</h4>
+                <p>Determining user profitability is challenging. High bot-generated revenue indicates activity but not necessarily user profit.[3] Bots like Trojan generate immense fees.[3] Token-based revenue sharing (Banana Gun, BonkBot) offers a mechanism, but it's tied to bot success and token volatility.[3] Sol Trading Bot showed efficient fee generation.[3] User anecdotes vary widely, with some reporting profits with Trojan [33] or Banana Gun [40, 64], while many using BullX [30, 31] or BonkBot [37, 39, 60] report losses due to fees on small trades.</p>
+                
+                <div class="overflow-x-auto my-6">
+                    <table>
+                        <caption><strong>Table 4: User Profitability Perception Ranking</strong></caption>
+                        <thead><tr><th>Bot Name</th><th>Profitability Score (1-5)</th><th>Supporting Evidence</th><th>Caveats</th></tr></thead>
+                        <tbody>
+                            <tr><td>Maestro</td><td>3.5</td><td>Reliable performance [41]; sniping/copy features. Reimbursement history.[42]</td><td>Fees apply; market risk. Past exploits.</td></tr>
+                            <tr><td>Trojan</td><td>3.0</td><td>Highest fee generator [3]. Some positive profit reports.[33]</td><td>High volume ≠ user profit. Fees substantial. Mixed P&L feedback.[33]</td></tr>
+                            <tr><td>Banana Gun</td><td>3.0</td><td>Revshare via $BANANA.[59, 63] Sniping success reported.[40, 64] Rug alerts save money.[40]</td><td>Sniping high risk. Token volatility. Fees.</td></tr>
+                            <tr><td>BonkBot</td><td>2.5</td><td>Revshare via $BONK burn/DAO.[35, 57] Fast for SOL memes, some profit reports.[35, 37]</td><td>High fees impact small trades.[37, 60] Unprofitability complaints.[36, 37, 39]</td></tr>
+                            <tr><td>Unibot (ETH)</td><td>2.5</td><td>Revshare via $UNIBOT.[65] Early mover.</td><td>$UNIBOT volatile. Lower recent DAU/volume.[22] Custodial risks.[67]</td></tr>
+                            <tr><td>GMGN</td><td>2.5</td><td>AI analytics could provide edge.[1] Some positive feedback.[29]</td><td>P&L display discrepancy reports.[29]</td></tr>
+                            <tr><td>BullX</td><td>1.5</td><td>Feature-rich platform.</td><td>Overwhelmingly negative Reddit feedback on profitability.[30, 31] Fund drain reports.[30]</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-slate-500">*This ranking is highly subjective. "Profitability Score" is an estimation of perceived user success.*</p>
+                </div>
+
+                <h4>B. User Feedback Ranking (Best vs. Worst Rated):</h4>
+                <ul>
+                    <li><strong>More Positive/Mixed-Positive:</strong> Maestro (reliability, support [41, 42]), GMGN (filters, speed [29]), Cornix (automation, integrations [9, 10, 48]).</li>
+                    <li><strong>Mixed:</strong> Trojan (Solana trading, fake bot issues [33, 34]), Banana Gun (sniping, UI/exploit concerns [5, 40, 56]), Unibot (ETH) (features, custodial risks, confused with ad service [43, 65, 67]), Mizar (features, API/fee issues [44, 45]).</li>
+                    <li><strong>More Negative/Mixed-Negative:</strong> BonkBot (speed vs. fees, support, fund issues [35-39]), BullX (fees, unprofitability, fund drain allegations [30, 31, 73]).</li>
+                </ul>
+
+                <div class="overflow-x-auto my-6">
+                    <table>
+                        <caption><strong>Table 5: User Feedback Leaderboard</strong></caption>
+                        <thead><tr><th>Bot Name</th><th>Overall Sentiment Score (Subjective)</th><th>Key Praises</th><th>Key Complaints</th></tr></thead>
+                        <tbody>
+                            <tr><td>Maestro</td><td>Positive</td><td>Reliability, Good Support, User Reimbursement [41, 42]</td><td>Occasional Slow TXs, Inherent Bot Risks [41]</td></tr>
+                            <tr><td>Cornix</td><td>Positive to Mixed</td><td>Signal Automation, Exchange Integration [9, 10]</td><td>VIP Tiers Expensive, Reliance on External Signals [48]</td></tr>
+                            <tr><td>Trojan</td><td>Mixed</td><td>Good for Solana Memecoins, DCA/Copy Trading [27, 33]</td><td>Speed/Fees Debated, Fake Bot Scams [33, 34]</td></tr>
+                            <tr><td>Banana Gun</td><td>Mixed</td><td>Fast Sniping, Effective Rug Alerts [40, 56]</td><td>Lacks Trade Filtering, Clunky Manual UI, Past Exploit [5, 40]</td></tr>
+                            <tr><td>Mizar</td><td>Mixed</td><td>CEX/DEX Features, Profitable Strategies Reported [44]</td><td>API Issues, Fee Structure Changes, Support [44, 45]</td></tr>
+                            <tr><td>Unibot (ETH)</td><td>Mixed</td><td>Pioneering Features, Token Benefits, MEV Protection [65, 67]</td><td>Custodial Wallet Risks, Past Audit Issues [67]</td></tr>
+                            <tr><td>BonkBot</td><td>Mixed to Negative</td><td>Very Fast on Solana, Simple UI, 2FA Security [35, 56, 61]</td><td>High Fees, Withdrawal Issues, Poor Support, Fund Discrepancies [36, 37, 39]</td></tr>
+                            <tr><td>BullX</td><td>Largely Negative</td><td>(Official: User-friendly, Comprehensive Tools [1])</td><td>Extreme Fees, Unprofitability, Fund Drain Allegations, Unresponsive Support [30, 31, 73]</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>User feedback is dynamic. Long-term reputation, support, and transparent communication are key indicators of quality.</p>
+
+                <h4>C. Feature Comparison Matrix:</h4>
+                <div class="overflow-x-auto my-6">
+                    <table>
+                         <caption><strong>Table 6: Telegram Bot Feature Matrix</strong></caption>
+                        <thead>
+                            <tr><th>Feature</th><th>Maestro</th><th>Trojan</th><th>BonkBot</th><th>Banana Gun</th><th>Unibot (ETH)</th><th>GMGN</th><th>BullX</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Supported Chains</td><td>ETH, BSC, SOL, ARB, Base, etc. [13]</td><td>Solana primarily [27]</td><td>Solana only [56]</td><td>ETH, SOL, Base, Blast [46, 56]</td><td>ETH, SOL [65, 66]</td><td>ETH, SOL, Base, TRON, Blast [69]</td><td>SOL, ETH, BSC, ARB, Base, Blast [70]</td></tr>
+                            <tr><td>Sniping</td><td>Yes (Liquidity, Method, Auto) [13]</td><td>Yes [27]</td><td>Yes (Auto) [56]</td><td>Yes (Auto) [56]</td><td>Yes (Method) [65]</td><td>Yes [69]</td><td>Yes (Sniper Monitor) [72]</td></tr>
+                            <tr><td>Copy Trading</td><td>Yes [13]</td><td>Yes [27]</td><td>Yes [56]</td><td>Yes [56]</td><td>Yes (Mirror Sniper) [65]</td><td>Yes [1]</td><td>Yes [72]</td></tr>
+                            <tr><td>Limit Orders</td><td>Yes [13]</td><td>Yes [27]</td><td>Yes [56]</td><td>Yes [56]</td><td>Yes (via features)</td><td>Implied [1]</td><td>Yes [1]</td></tr>
+                            <tr><td>MEV Protection</td><td>Yes (Anti-MEV) [13]</td><td>Optional [27]</td><td>Yes (Jito) [37]</td><td>Yes [56]</td><td>Yes (Private Tx) [65]</td><td>Implied</td><td>Yes (Solana Jito) [70]</td></tr>
+                            <tr><td>Anti-Rug/Scam Protect</td><td>Yes (Patented Anti-Rug) [13]</td><td>Implied [9]</td><td>Yes (Rug Pull Protection) [56]</td><td>Yes (Simulations, Blacklist) [1]</td><td>Fail Guard [67]</td><td>Yes (Contract Security Checks) [1]</td><td>Yes (Bubblemaps, Audits) [70]</td></tr>
+                            <tr><td>Wallet Type</td><td>Generated/Import (Custodial) [13]</td><td>Generated/Import (Custodial) [27, 55]</td><td>Generated (Custodial, KMS) [28]</td><td>Generated/Import (Custodial)</td><td>Generated (Custodial, Cloud Keys) [67]</td><td>Likely Custodial</td><td>Import (User-controlled keys claim) [70]</td></tr>
+                            <tr><td>Typical Fees</td><td>~1% [50]</td><td>1% (0.9% ref) [27]</td><td>1% per trade [56]</td><td>1% snipe, 0.5% manual [56]</td><td>~1% (less for holders) [65]</td><td>N/A</td><td>0.9% (less for ref) [70]</td></tr>
+                            <tr><td>Native Token</td><td>No</td><td>No</td><td>Yes ($BONK int.) [35]</td><td>Yes ($BANANA) [63]</td><td>Yes ($UNIBOT) [65]</td><td>No</td><td>No</td></tr>
+                            <tr><td>DAU (Approx. May '25)</td><td>~4,900 [18]</td><td>~21,000 [15]</td><td>~5,300 [17]</td><td>~4,500 [20]</td><td>~85 [22]</td><td>N/A</td><td>N/A</td></tr>
+                            <tr><td>Lifetime Vol. (Approx.)</td><td>$12.5B+ [18]</td><td>$23.2B+ [15]</td><td>$13.5B+ [17]</td><td>$10.9B+ [20]</td><td>$1.1B+ [22]</td><td>$5.1B+ (SOL) [69]</td><td>N/A</td></tr>
+                            <tr><td>Security Audit</td><td>Some (CertiK) [51]</td><td>Regular [27]</td><td>Yes (OtterSec) [28]</td><td>Post-exploit [5]</td><td>Yes (Quantstamp 2022) [67]</td><td>N/A</td><td>"Regular Audits" [72]</td></tr>
+                        </tbody>
+                    </table>
+                     <p class="text-xs text-slate-500">*N/A: Data not readily available. Wallet Type often implies custodial risk.*</p>
+                </div>
+
+                <h3>VI. Risks Associated with Telegram Trading Bots</h3>
+                <p>While Telegram trading bots offer convenience, they come with significant risks spanning security, legal, regulatory, and platform-specific domains.</p>
+                <h4>A. Security Risks:</h4>
+                <h5>1. Phishing, Malware, and Scam Bots:</h5>
+                <p>Fake bots mimicking legitimate services are prevalent, aiming to steal funds or keys via phishing links or deceptive interactions.[1, 91, 34, 90, 73]</p>
+                <h5>2. Wallet Security (Private Key Management):</h5>
+                <p>Many bots operate custodially, storing user private keys (often encrypted), which poses risks if the bot's systems are breached or the provider is malicious.[6, 13, 42, 55, 58, 67, 89, 92] Some bots are exploring advanced KMS solutions.[28, 62]</p>
+                <h5>3. Smart Contract Vulnerabilities:</h5>
+                <p>Interaction with malicious or unaudited token contracts (e.g., honeypots) can lead to losses. Many bots include anti-rug/scam detection features, but these are not foolproof.[1, 8, 19, 89]</p>
+                <h5>4. Data Interception and API Key Security:</h5>
+                <p>Insecure handling of CEX API keys or communication can lead to unauthorized access or fund theft.[2, 91, 93]</p>
+                <h5>5. Telegram Platform-Specific Vulnerabilities:</h5>
+                <p>Exploits related to Telegram's infrastructure or API, like the Banana Gun oracle exploit, can occur.[5] The API can also be abused for phishing campaigns.[94]</p>
+                <p>Ensuring safety is a shared responsibility between developers (secure building) and users (vigilance, verification).</p>
+
+                <h4>B. Legal and Regulatory Risks:</h4>
+                <p>The legal landscape is developing and ambiguous.</p>
+                <h5>1. Compliance with Financial Regulations (AML, KYC):</h5>
+                <p>Many DEX bots lack KYC/AML, raising regulatory concerns.[95] Tools like Scorechain Telegram AML Bot indicate growing scrutiny.[96] Unregulated financial activities via Telegram are a risk.[97]</p>
+                <h5>2. SEC, CFTC, FINRA Perspectives (U.S. Context):</h5>
+                <p>Existing securities laws and anti-fraud provisions apply if bots trade securities or make deceptive claims.[99, 100, 101] The FTC has acted against bots with unfounded profit claims.[99]</p>
+                <h5>3. Telegram's Terms of Service:</h5>
+                <p>Bots facilitating illegal activities can violate Telegram's ToS, which restricts illegal content and fraud.[8, 102]</p>
+                <h5>4. Jurisdictional Issues:</h5>
+                <p>Global operation creates complex cross-border legal challenges. For users in Tampa, Florida, U.S. federal and Florida state laws apply.</p>
+                <p>Caution is advised due to the lack of specific, harmonized regulations.</p>
+
+                <h4>C. Platform Risks (Building on Telegram):</h4>
+                <h5>1. Telegram API Limitations:</h5>
+                <p>Message rate limits (e.g., 1/sec in single chat, 20/min in groups, ~30/sec for bulk unless paid) can affect high-frequency bots.[103] File size limits and no bot-to-bot communication also apply.[103]</p>
+                <h5>2. Platform Stability and Uptime:</h5>
+                <p>Bot reliability depends on Telegram's uptime. Outages can impact bot functionality.[104]</p>
+                <h5>3. Risk of API Changes or Policy Shifts by Telegram:</h5>
+                <p>Changes to Telegram's API or policies could break bot functionality or lead to restrictions.[102]</p>
+                <p>Developers must build resilient bots and users should understand platform dependency.</p>
+
+                <h3>VII. Building a Telegram Trading Bot: Considerations</h3>
+                <h4>A. Key Development Steps (Brief Overview):</h4>
+                <ol>
+                    <li><strong>Planning and Design:</strong> Define purpose, audience, features, technical requirements, compliance, lifecycle.[2, 83, 95]</li>
+                    <li><strong>Choosing Language and Architecture:</strong> Python or Node.js common. Architecture for UI, trading logic, API interaction, secure storage.[92, 95]</li>
+                    <li><strong>Developing Trading Strategy Logic:</strong> Translate strategies into programmable rules.[83, 95]</li>
+                    <li><strong>API Integration:</strong> Securely connect to exchanges or blockchains.[83, 95]</li>
+                    <li><strong>Programming the Bot:</strong> Implement Telegram interface, trading logic, wallet management, database interaction.[92, 95]</li>
+                    <li><strong>Security Implementation:</strong> Encryption, secure communication from the start.[2, 92]</li>
+                    <li><strong>Testing:</strong> Unit, integration, UAT, paper trading/simulation.[2, 83]</li>
+                    <li><strong>Secure Deployment:</strong> Secure and reliable server environment.[2]</li>
+                    <li><strong>Monitoring and Maintenance:</strong> Continuous monitoring, incident response, regular updates.[2, 7]</li>
+                </ol>
+                <p>Building a secure, reliable bot is a complex engineering challenge.</p>
+
+                <h4>B. Security Best Practices for Developers:</h4>
+                <ul>
+                    <li><strong>Data Encryption:</strong> Encrypt sensitive data (private/API keys) at rest and in transit (AES-256).[2, 92]</li>
+                    <li><strong>Secure API Key Handling:</strong> Minimum permissions, encrypted storage, secure transmission.[2, 91]</li>
+                    <li><strong>Input Validation and Sanitization:</strong> Prevent injection attacks.</li>
+                    <li><strong>Secure Communication:</strong> HTTPS/WSS, TLS encryption.[2]</li>
+                    <li><strong>Authentication and Authorization:</strong> Strong admin auth (2FA), access controls.[2, 7]</li>
+                    <li><strong>Regular Security Audits:</strong> Independent audits and penetration tests.[2, 7, 91]</li>
+                    <li><strong>Fail-Safe Mechanisms and Error Handling:</strong> Graceful error handling, alerts.[2]</li>
+                    <li><strong>Anti-Rug Pull and Scam Token Detection:</strong> Integrate mechanisms for DEX bots.[2, 7]</li>
+                    <li><strong>Rate Limiting and Abuse Prevention:</strong> Protect against DoS.</li>
+                    <li><strong>Secure Server Environment:</strong> Hardened servers, patching, firewalls.</li>
+                    <li><strong>Incident Response Plan:</strong> Detail steps for breaches or failures.[2]</li>
+                    <li><strong>Continuous Monitoring and Logging:</strong> Track activity, performance, security events.[2]</li>
+                    <li><strong>User Education on Security:</strong> Advise users on best practices, official channels.[1, 28, 34, 49]</li>
+                </ul>
+                <p>Adherence to best practices reduces risk, but transparency is also key.</p>
+
+                <h3>VIII. Conclusion and Future Outlook</h3>
+                <p>The Telegram trading bot market is a dynamic, expanding frontier offering convenience but facing significant challenges in security, user profitability transparency, and regulatory ambiguity. Solana-based bots are trending for certain trades, while multi-chain bots maintain share. Features are increasingly sophisticated, including AI and advanced risk management.</p>
+                <p>Future Outlook:</p>
+                <ol>
+                    <li><strong>Enhanced Security and Trust:</strong> Focus on provably secure key management, audits, and scam bot combat.</li>
+                    <li><strong>Verifiable User Profitability:</strong> Push for transparency in user success rates or aligned incentives.</li>
+                    <li><strong>AI Integration:</strong> Deeper AI for analytics, strategy optimization, but with governance challenges.[8, 76]</li>
+                    <li><strong>Improved Cross-Chain Functionality:</strong> Seamless, secure cross-chain trading.</li>
+                    <li><strong>Regulatory Clarity and Platform Governance:</strong> Increased regulatory attention and potential platform policy shifts by Telegram.</li>
+                </ol>
+                <p><strong>For Users:</strong> Vigilance, due diligence, understand fees/keys, start small, use 2FA, verify links.</p>
+                <p><strong>For Developers:</strong> Prioritize security, transparency, robust encryption, audits, clear communication, support.</p>
+                <p>The ecosystem's ability to address challenges will determine its long-term viability.</p>
+
+                <h3>IX. Appendix</h3>
+                <h4>A. Glossary of Terms</h4>
+                <ul>
+                    <li><strong>Sniping:</strong> Auto-buying new tokens.</li>
+                    <li><strong>MEV (Maximal Extractable Value):</strong> Profit from reordering/inserting transactions.</li>
+                    <li><strong>Anti-Rug Protection:</strong> Features to detect/prevent "rug pull" scams.</li>
+                    <li><strong>DCA (Dollar-Cost Averaging):</strong> Buying a fixed dollar amount of an asset at regular intervals.</li>
+                    <li><strong>Custodial Wallet:</strong> Third-party holds private keys.</li>
+                    <li><strong>API Key:</strong> Code for software interaction (e.g., bot to exchange).</li>
+                    <li><strong>Smart Contract:</strong> Self-executing code on a blockchain.</li>
+                    <li><strong>Liquidity Pool:</strong> Tokens locked in a DEX smart contract for trading.</li>
+                    <li><strong>Honeypot (Crypto Scam):</strong> Malicious contract allowing buys but not sells.</li>
+                    <li><strong>Slippage:</strong> Difference between expected and executed trade price.</li>
+                    <li><strong>Gas Fees:</strong> Blockchain transaction fees.</li>
+                    <li><strong>2FA (Two-Factor Authentication):</strong> Security requiring two verification factors.</li>
+                </ul>
+
+                <h4>B. Verified Official Bot Links</h4>
+                <p>Users must exercise extreme caution and **always verify these links through multiple official community sources** before interacting with any bot or connecting a wallet. The Telegram bot space is rife with impersonators and scam links.</p>
+                <div class="overflow-x-auto my-6">
+                    <table>
+                        <caption><strong>Table 7: Official Bot Resources (Verify Before Use)</strong></caption>
+                        <thead>
+                            <tr><th>Bot Name</th><th>Verified Website Link(s)</th><th>Official Telegram Channel Access</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Maestro</td><td>`maestrobots.com` [1, 19]</td><td>Via bot interface; specific channels for updates, support, hub [13]</td></tr>
+                            <tr><td>Trojan</td><td>Access via official website or verified social channels</td><td>Main bot interface; ensure official to avoid scams [27, 34]</td></tr>
+                            <tr><td>BonkBot</td><td>`bonkbot.io` [28, 56]</td><td>Start via website; search verified `bonkbot_bot` on Telegram [36, 58]</td></tr>
+                            <tr><td>Banana Gun</td><td>`bananagun.io` [46, 56]</td><td>Main bot interface and community group via official website.</td></tr>
+                            <tr><td>Unibot (ETH)</td><td>`unibot.app` (verify through community)</td><td>Main bot interface.</td></tr>
+                            <tr><td>GMGN.AI</td><td>`gmgn.ai` [1, 69]</td><td>Main bot interface.</td></tr>
+                            <tr><td>BullX</td><td>`bullx.io` [71] or `bullx-bot.net` [70]</td><td>Requires Telegram account; bot integrated with web platform.[70]</td></tr>
+                            <tr><td>Mizar</td><td>`mizar.com` [76, 77]</td><td>Main bot interface and app.</td></tr>
+                            <tr><td>Cornix</td><td>`cornix.io` [10, 79]</td><td>Main bot interface and platform.</td></tr>
+                            <tr><td>Pionex</td><td>`pionex.com` [105]</td><td>Platform with integrated bots, not primarily Telegram.</td></tr>
+                            <tr><td>Sol Trading Bot</td><td>`solinabot.com` (for SolinaBot) [84]</td><td>`t.me/startsolinabot` (for SolinaBot - verify)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="sources" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-cyan-700 mb-6">Sources & References</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg report-content">
+                <p>The source report "The Evolving Landscape of Telegram Trading Bots: A Comprehensive Analysis" utilizes inline numerical citations (e.g., [1], [2], [3], etc.) throughout the text to refer to its underlying sources.</p>
+                <p>However, the provided document did not include a separate bibliography or a detailed list specifying what each of these numerical citations corresponds to. Therefore, while we can see the points at which sources are referenced, the full details of those original sources are not available within this version of the report.</p>
+                <p>The report makes reference to the following citation numbers:
+                    <span id="citationList">Loading cited references...</span>
+                </p>
+                <p class="mt-4 text-sm text-slate-600">For accurate and complete sourcing, one would need to consult the original version of the report that includes the full bibliography corresponding to these numerical citations.</p>
+            </div>
+        </section>
+
     </main>
 
     <footer class="bg-slate-800 text-slate-300 text-center p-6 mt-12">
@@ -410,10 +928,10 @@
             }]
         };
         new Chart(tradingVolumeCtx, {
-            type: 'bar', // Changed to bar for better readability with these many items
+            type: 'bar', 
             data: tradingVolumeData,
             options: {
-                indexAxis: 'y', // Horizontal bar chart
+                indexAxis: 'y', 
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
@@ -426,7 +944,7 @@
                         grid: { display: false },
                          ticks: {
                             callback: function(value, index, values) {
-                                return wrapLabels(this.getLabelForValue(value), 15); // Wrap labels
+                                return wrapLabels(this.getLabelForValue(value), 15); 
                             },
                             font: { size: 10 }
                         }
@@ -488,7 +1006,7 @@
                         grid: { display: false },
                         ticks: {
                             callback: function(value, index, values) {
-                                return wrapLabels(this.getLabelForValue(value), 10); // Wrap labels
+                                return wrapLabels(this.getLabelForValue(value), 10); 
                             },
                              font: { size: 10 }
                         }
@@ -636,18 +1154,22 @@
                         if (link.href.split('#')[1] === entry.target.id) {
                             link.classList.add('active', 'border-b-2', 'border-pink-300', 'text-white');
                         } else {
-                             link.classList.remove('text-white'); // Ensure non-active links revert
+                             link.classList.remove('text-white'); 
                         }
                     });
                 }
             });
         }
 
-        const options = { threshold: 0.4 }; // Adjust threshold as needed
-        const observer = new IntersectionObserver(changeNav, options);
+        const observerOptions = { 
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.4 // 40% of section visible
+        };
+        const sectionObserver = new IntersectionObserver(changeNav, observerOptions);
 
         sections.forEach(section => {
-            observer.observe(section);
+            sectionObserver.observe(section);
         });
         
         navLinks.forEach(link => {
@@ -656,24 +1178,20 @@
                 const targetId = this.getAttribute('href');
                 const targetSection = document.querySelector(targetId);
                 if (targetSection) {
-                    // Temporarily unobserve to prevent immediate re-triggering
-                    sections.forEach(s => observer.unobserve(s));
+                    sections.forEach(s => sectionObserver.unobserve(s));
                     
                     window.scrollTo({
-                        top: targetSection.offsetTop - document.querySelector('header').offsetHeight, // Adjust for fixed header
+                        top: targetSection.offsetTop - document.querySelector('header').offsetHeight, 
                         behavior: 'smooth'
                     });
 
-                    // Update active class immediately for responsiveness
                     navLinks.forEach(nav => nav.classList.remove('active', 'border-b-2', 'border-pink-300', 'text-white'));
                     this.classList.add('active', 'border-b-2', 'border-pink-300', 'text-white');
                     
-                    // Re-observe after a short delay
                     setTimeout(() => {
-                         sections.forEach(s => observer.observe(s));
-                    }, 500); // Adjust delay if needed
+                         sections.forEach(s => sectionObserver.observe(s));
+                    }, 700); // Increased delay to allow scroll to finish
                 }
-                 // For mobile menu, close it after click
                 const mobileNav = document.getElementById('mobileNav');
                 if (!mobileNav.classList.contains('hidden')) {
                     mobileNav.classList.add('hidden');
@@ -681,7 +1199,6 @@
             });
         });
         
-        // Set initial active link based on URL hash or first section
         function setInitialActiveLink() {
             let currentHash = window.location.hash;
             if (!currentHash && sections.length > 0) {
@@ -696,16 +1213,40 @@
         }
         window.addEventListener('load', setInitialActiveLink);
 
-
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileNav = document.getElementById('mobileNav');
-        const desktopNav = document.getElementById('desktopNav');
 
         mobileMenuButton.addEventListener('click', () => {
             mobileNav.classList.toggle('hidden');
         });
 
+        // Extract and display citation numbers
+        function displayCitationNumbers() {
+            const reportContentElement = document.querySelector('#full-report .report-content');
+            if (!reportContentElement) return;
+
+            const reportText = reportContentElement.innerText;
+            const citationRegex = /\[(\d+)\]/g;
+            let match;
+            const citationNumbers = new Set();
+            while ((match = citationRegex.exec(reportText)) !== null) {
+                citationNumbers.add(parseInt(match[1]));
+            }
+            
+            const sortedCitations = Array.from(citationNumbers).sort((a, b) => a - b);
+            const citationListElement = document.getElementById('citationList');
+            if (citationListElement) {
+                if (sortedCitations.length > 0) {
+                    citationListElement.textContent = sortedCitations.map(num => `[${num}]`).join(', ') + ".";
+                } else {
+                    citationListElement.textContent = "No citation numbers found in the report text.";
+                }
+            }
+        }
+        window.addEventListener('load', displayCitationNumbers);
+
     </script>
 </body>
 </html>
+
